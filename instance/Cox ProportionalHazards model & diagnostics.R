@@ -186,7 +186,7 @@ plot(test_ph[2])
 # prog_recp变量的系数随着时间的改变，prog_recp偏离的比较厉害, 系数大概从810天开始增加, 趋近于0；
 # 1900天又开始下降, 所以prog_recp的系数是一直在随着时间改变的, 不符合比例风险假设
 
-## 1)对时间分层
+## 1）对时间分层
 ## 对时间使用分层函数
 stra <- survSplit(Surv(time, status) ~ ., data = data, 
                   cut=c(810, 1900), # 两个拐点把时间分为3层
@@ -203,7 +203,7 @@ test_ph
 task_stra = TaskSurv$new("gbcs", stra, event = "status")
 autoplot(task_stra, rhs = "tgroup")
 
-## 连续性时依系数变换
+## 2）连续性时依系数变换
 # prog_recp系数随时间变化的曲线明显不是线性的
 # 我们可以通过数据变换把它变成类似线性的，比如取log
 # 可通过tt(time transform)函数实现
@@ -234,7 +234,7 @@ abline(0, 0, col = "red") # 0水平线
 abline(h = fit_cox$coef[2], col = "green", lwd = 2, lty = 2) # 整体估计
 abline(coef(fit_cox_log)[2:3], col = "blue", lwd = 2, lty = 3) # 现在的估计
 
-## 样条技术
+## 3）样条技术
 # 使用样条技术pspline(time)进行数据变换
 fit_cox_ps_1 <- coxph(Surv(time, status) ~ nodes + prog_recp + tt(prog_recp), # 对prog_recp进行变换
               data = data, 
